@@ -1,0 +1,29 @@
+version: 1
+name: late_arriving_order
+project: ../analytics
+model: fct_orders
+sources:
+  raw.orders:
+    columns:
+      order_id: BIGINT
+      ordered_at: TIMESTAMP
+      updated_at: TIMESTAMP
+      amount: DECIMAL(12, 2)
+compare:
+  key: [order_id]
+  columns: [order_id, ordered_at, amount]
+steps:
+  - name: initial
+    sources: {raw.orders: fixtures/initial.csv}
+    assert: [full_refresh_equivalent]
+  - name: new_batch
+    sources: {raw.orders: fixtures/new_batch.csv}
+    assert: [full_refresh_equivalent]
+  - name: rerun
+    assert: [unchanged, full_refresh_equivalent]
+  - name: late_arrival
+    sources: {raw.orders: fixtures/late.csv}
+    assert: [full_refresh_equivalent]
+  - name: corrected_amount
+    sources: {raw.orders: fixtures/corrected.csv}
+    assert: [full_refresh_equivalent]

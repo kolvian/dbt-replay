@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dbt-replay"
+version = "0.1.0"
+description = "Replay source changes against persisted incremental dbt models."
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+license = "MIT"
+dependencies = ["dbt-core>=1.11,<1.12", "dbt-duckdb==1.11.0", "duckdb>=1.5,<1.6", "PyYAML>=6,<7"]
+
+[project.scripts]
+dbt-replay = "dbt_replay.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "ruff>=0.12", "build>=1"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
